@@ -1,1 +1,1 @@
-##Resource Management using Python boto3 sdk
+# Resource Management using Python boto3 sdk
