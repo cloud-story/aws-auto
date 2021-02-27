@@ -1,7 +1,7 @@
 import copy
 
 from flask import Blueprint
-from flask_restplus import Api
+from flask_restx import Api
 
 from service.resources.aws.ec2.instance import ns as aws_ec2_ns
 from service.utils.constants import GENERIC_ERROR_RESPONSE_TEMPLATE

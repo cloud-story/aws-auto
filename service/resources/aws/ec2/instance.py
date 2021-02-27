@@ -3,7 +3,7 @@ import service.resources.aws.iam.roles as iamrole
 import time 
 from flask import Blueprint, request, json, Response
 from flask import json, jsonify, make_response, request
-from flask_restplus import Namespace, Resource
+from flask_restx import Namespace, Resource
 from service.utils.aws_logger import AWSLogger
 from service.utils.date_util import  DateUtil
 from service.utils.exceptions import BadRequestException, MissingRequestBodyException
