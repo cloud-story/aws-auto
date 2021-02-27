@@ -32,7 +32,7 @@ def createRole(name,policy_arns):
     for policy_arn in policy_arns:
         #create role
         response = role.attach_policy(
-            PolicyArn=policy_+"_instance_pofile"arn,
+            PolicyArn=policy_arn+"_instance_pofile"
         )
 
         #create instance profile

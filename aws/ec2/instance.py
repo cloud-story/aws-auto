@@ -1,13 +1,20 @@
 import boto3
 import aws.iam.roles as iamrole
 import time 
+from flask import Blueprint, request, json, Response
+
 
 client = boto3.client('ec2')
 
+ec2_insnstances_bp = Blueprint('ec2_instance', __name__);
 
-def runSimpleInstance(instanceProperties):
+
+@ec2_insnstances_bp.route("/instance/create/simple")
+def runSimpleInstance():
+    #TODO read from Requests
+    instanceProperties={};
     """
-        aws ec2 run-instances --image-id ami-0915bcb5fa77e4892 --count 1 --instance-type t2.micro --key-name ec-new-2021 --security-group-ids sg-0af1fa8b64bdfdb5b \
+    aws ec2 run-instances --image-id ami-0915bcb5fa77e4892 --count 1 --instance-type t2.micro --key-name ec-new-2021 --security-group-ids sg-0af1fa8b64bdfdb5b \
     --subnet-id subnet-663b5a48
     """
     response = client.run_instances(
@@ -22,9 +29,14 @@ def runSimpleInstance(instanceProperties):
         MaxCount=1,
         MinCount=1,
     )
-    print(response)
+    return Response(response=json.dumps(response),
+                    status=200,
+                    mimetype='application/json')
 
+@ec2_insnstances_bp.route("/instance/terminate/<string:instanceIds>")
 def terminateInstance(instanceIds):
+
+    
     #aws ec2 terminate-instances --instance-ids i-0da7b1b2a4a7a8d51
     if not instanceIds:
         return "Please provide instance id's to be terminated"
@@ -32,15 +44,20 @@ def terminateInstance(instanceIds):
         InstanceIds=instanceIds
     )
 
-    print(response);
+    return Response(response=json.dumps(response),
+                    status=200,
+                    mimetype='application/json')
 
-
-def runInstancesWithRole(instanceProperties):
+@ec2_insnstances_bp.route("/instance/create/withrole")
+def runInstancesWithRole():
     """ 
     aws ec2 run-instances --image-id ami-0915bcb5fa77e4892 --count 2 --instance-type t2.micro --key-name ec-new-2021 --security-group-ids sg-0af1fa8b64bdfdb5b \
     subnet-id subnet-663b5a48 --iam-instance-profile arn:aws:iam::764319766871:role/AMZ_EC2_Role_FOR_SSM \
     --tag-specifications 'ResourceType=instance,Tags=[{Key=env,Value=dev}]'
     """
+
+    #TODO read from Requests
+    instanceProperties={};
 
     #Create Role
     print("Creating role:")
@@ -79,4 +96,6 @@ def runInstancesWithRole(instanceProperties):
             'Name': roleName+"_instance_pofile"
         }
     )
-    print(response)
+    return Response(response=json.dumps(response),
+                    status=200,
+                    mimetype='application/json')
